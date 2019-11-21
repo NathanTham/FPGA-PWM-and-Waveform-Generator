@@ -1,0 +1,34 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity squarewave is
+	Port (  reset : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           pulse :  in STD_LOGIC;
+           PWM_OUT : out STD_LOGIC
+          );
+end squarewave;
+
+architecture Behavioural of squarewave is 
+    constant max_count: std_logic_vector(width-1 downto 0) := (others => '1');  
+    constant zeros_count : std_logic_vector(width-1 downto 0) := (others => '0');
+	 
+	 component PWM_DAC is
+        Generic ( width : integer := 9);
+        Port (    reset : in STD_LOGIC;
+                  clk : in STD_LOGIC;
+                  duty_cycle : in STD_LOGIC_VECTOR(width-1 downto 0);
+                  pwm_out : out STD_LOGIC
+              );
+     end component;
+	  
+	  begin
+	  pwm : PWM_DAC 
+     generic map (width => 9)
+     port map (
+        reset => reset,
+        clk => clk,
+        duty_cycle => duty_cycle,
+        pwm_out => pwm_out_i
+        );

@@ -1,0 +1,47 @@
+-- This is example code that uses the downcounter module to create the signals
+-- to drive the 7-segment displays for a countdown timer. This code is
+-- provided to you to show an example of how to use the downcounter module,
+-- if it is of use to your project.
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.math_real.ceil;
+use IEEE.math_real.log2;
+
+entity clock_divider is
+    PORT ( clk      : in  STD_LOGIC;
+           reset    : in  STD_LOGIC;
+           enable   : in  STD_LOGIC;
+           frequency1k : out STD_LOGIC;
+           );
+end clock_divider;
+
+architecture Behavioral of clock_divider is
+-- Signals:
+signal internal1k : STD_LOGIC;
+
+-- Components declarations
+component downcounter is
+   Generic ( period  : natural := 1000); -- number to count
+      PORT (  clk    : in  STD_LOGIC;
+              reset  : in  STD_LOGIC;
+              enable : in  STD_LOGIC;
+              zero   : out STD_LOGIC;
+              value  : out STD_LOGIC_VECTOR(integer(ceil(log2(real(period)))) - 1 downto 0)
+           );
+end component;
+
+BEGIN
+
+   oneMHzClock: downcounter
+   generic map(period => 5)--50000000) -- divide by 50_000_000 to divide 50 MHz down to 1 Hz
+                               -- for simulation, use 50_000, to increase the simulation speed
+   PORT MAP (
+               clk    => clk,
+               reset  => reset,
+               enable => enable, -- if system is enabled, this this counting
+               zero   => onehertz, -- this is a 1-clock cycle pulse every second
+               value  => internal1k  -- Leave open since we won't display this value
+            );
+  frequency1k <= internal1k;          
+END Behavioral;
