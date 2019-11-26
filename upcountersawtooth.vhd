@@ -8,12 +8,12 @@ entity upcountersaw is
     PORT ( clk    : in  STD_LOGIC; -- clock to be divided
            reset  : in  STD_LOGIC; -- active-high reset
            enable : in  STD_LOGIC; -- active-high enable
-           value  : out STD_LOGIC_VECTOR(8 downto 0) -- outputs the current_count value, if needed
+           value  : out STD_LOGIC_VECTOR(15 downto 0) -- outputs the current_count value, if needed
          );
 end upcountersaw;
 
 architecture Behavioral of upcountersaw is
-  signal current_count : STD_LOGIC_VECTOR(8 downto 0);
+  signal current_count : STD_LOGIC_VECTOR(15 downto 0);
   
 BEGIN
    

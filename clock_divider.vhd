@@ -12,17 +12,23 @@ entity clock_divider is
     PORT ( clk      : in  STD_LOGIC;
            reset    : in  STD_LOGIC;
            enable   : in  STD_LOGIC;
-			  frequency1m : out STD_LOGIC;
-			  frequency500k : out STD_LOGIC;
-			  frequency250k : out STD_LOGIC;
-			  frequency125k : out STD_LOGIC;
-			  frequency63k : out STD_LOGIC;
-			  frequency31k : out STD_LOGIC;
-			  frequency16k : out STD_LOGIC;
-			  frequency8k : out STD_LOGIC;
-			  frequency4k : out STD_LOGIC;
-           frequency2k : out STD_LOGIC;
-			  frequency1k : out STD_LOGIC
+			  frequency1m		: out STD_LOGIC;
+			  frequency500k 	: out STD_LOGIC;
+			  frequency333k 	: out STD_LOGIC;
+			  frequency250k 	: out STD_LOGIC;
+			  frequency200k 	: out STD_LOGIC;
+			  frequency125k 	: out STD_LOGIC;
+			  frequency111k 	: out STD_LOGIC;
+			  frequency63k 	: out STD_LOGIC;
+			  frequency40k 	: out STD_LOGIC;
+			  frequency37k 	: out STD_LOGIC;
+			  frequency31k 	: out STD_LOGIC;
+			  frequency16k 	: out STD_LOGIC;
+			  frequency12k 	: out STD_LOGIC;
+			  frequency8k 		: out STD_LOGIC;
+			  frequency4k 		: out STD_LOGIC;
+           frequency2k 		: out STD_LOGIC;
+			  frequency1k 		: out STD_LOGIC
            );
 end clock_divider;
 
@@ -30,11 +36,17 @@ architecture Behavioral of clock_divider is
 -- Signals:
 signal internal1m : STD_LOGIC; 
 signal internal500k : STD_LOGIC;
+signal internal333k : STD_LOGIC; --divide by 3
 signal internal250k : STD_LOGIC;
+signal internal200k : STD_LOGIC; --divide by 5 
 signal internal125k : STD_LOGIC;
+signal internal111k : STD_LOGIC; --3
 signal internal63k : STD_LOGIC;
+signal internal40k : STD_LOGIC; --5
+signal internal37k : STD_LOGIC; --3
 signal internal31k : STD_LOGIC;
 signal internal16k : STD_LOGIC;
+signal internal12k : STD_LOGIC; --3
 signal internal8k : STD_LOGIC;
 signal internal4k : STD_LOGIC;
 signal internal2k : STD_LOGIC;
@@ -52,8 +64,7 @@ component downcounter is
 end component;
 
 BEGIN
-
-	oneMHzpulse: downcounter
+	oneMHzpulse : downcounter
 	generic map (period=>50)
 	port map(
                clk    => clk,	
@@ -61,9 +72,9 @@ BEGIN
                enable => enable,
                zero   => internal1m,
                value  => open
-            );
+            );		
 	
-	fivehundredkHzpulse: downcounter
+	fivehundredkHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -73,7 +84,17 @@ BEGIN
                value  => open
             );
 				
-	twohundredfiftykHzpulse: downcounter
+	threehundredkHzpulse : downcounter
+	generic map (period=>3)
+	port map(
+               clk    => clk,	
+               reset  => reset,
+               enable => internal1m,
+               zero   => internal333k,
+               value  => open
+            );			
+				
+	twohundredfiftykHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -82,8 +103,19 @@ BEGIN
                zero   => internal250k,
                value  => open
             );
+	
+	twohundredkhzpulse : downcounter
+	generic map (period=>5)
+	port map(
+               clk    => clk,	
+               reset  => reset,
+               enable => internal1m,
+               zero   => internal200k,
+               value  => open
+            );
 				
-	onetwentyfivekHzpulse: downcounter
+	
+	onetwentyfivekHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -93,7 +125,18 @@ BEGIN
                value  => open
             );
 				
-	sixtythreekHzpulse: downcounter
+	onehundredelevenkHzpulse : downcounter
+	generic map (period=>3)
+	port map(
+               clk    => clk,	
+               reset  => reset,
+               enable => internal333k,
+               zero   => internal111k,
+               value  => open
+            );
+					
+				
+	sixtythreekHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -103,7 +146,28 @@ BEGIN
                value  => open
             );
 				
-	thirtyonekHzpulse: downcounter
+	fortykHzpulse : downcounter
+	generic map (period=>5)
+	port map(
+               clk    => clk,	
+               reset  => reset,
+               enable => internal200k,
+               zero   => internal40k,
+               value  => open
+            );
+				
+
+	thirtysevenkHzpulse : downcounter
+	generic map (period=>3)
+	port map(
+               clk    => clk,	
+               reset  => reset,
+               enable => internal111k,
+               zero   => internal37k,
+               value  => open
+            );
+	
+	thirtyonekHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -113,7 +177,7 @@ BEGIN
                value  => open
             );
 				
-	sixteenkHzpulse: downcounter
+	sixteenkHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -123,7 +187,18 @@ BEGIN
                value  => open
             );
 				
-	eightkHzpulse: downcounter
+	twelvekhzpulse : downcounter
+	generic map (period=>3)
+	port map(
+               clk    => clk,	
+               reset  => reset,
+               enable => internal37k,
+               zero   => internal12k,
+               value  => open
+            );
+				
+				
+	eightkHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -133,7 +208,7 @@ BEGIN
                value  => open
             );
 				
-	fourkHzpulse: downcounter
+	fourkHzpulse : downcounter
 	generic map (period=>2)
 	port map(
                clk    => clk,	
@@ -143,7 +218,7 @@ BEGIN
                value  => open
             );
 	
-   twokHzpulse: downcounter
+   twokHzpulse : downcounter
    generic map(period => 2) 
    PORT MAP (
                clk    => clk,	
@@ -153,7 +228,7 @@ BEGIN
                value  => open 
             );
 				
-	onekHzpulse: downcounter
+	onekHzpulse : downcounter
    generic map(period => 2) 
    PORT MAP (
                clk    => clk,	
@@ -165,11 +240,17 @@ BEGIN
     
   frequency1m <= internal1m;		
   frequency500k <= internal500k; 
+  frequency333k <= internal333k;
   frequency250k <= internal250k;
+  frequency200k <= internal200k;
   frequency125k <= internal125k;
+  frequency111k <= internal111k;
   frequency63k <= internal63k;
+  frequency40k <= internal40k;
+  frequency37k <= internal37k;
   frequency31k <= internal31k;
   frequency16k <= internal16k;
+  frequency12k <= internal12k;
   frequency8k <= internal8k;
   frequency4k <= internal4k;
   frequency2k <= internal2k;          
